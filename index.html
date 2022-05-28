@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/style/nav.css" />
+    <link rel="stylesheet" href="./style/back.css">
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="main">
+      <button id="btn1" > User Repo</button>
+    </div>
+    <div id="show"></div>
+  </body>
+</html>
+
+<script type="module">
+  import navbar from "./components/navbar.js";
+  import getUser from "./scripts/getUser.js"
+  import appenddata from "./scripts/append.js"
+
+  let con = document.getElementById("container");
+
+  con.innerHTML = navbar();
+  let input = document.getElementById("search-input");
+  let does = document.getElementById("show")
+  input.addEventListener("keypress", searchUser);
+
+  async function searchUser(event) {
+    if (event.key == "Enter") {
+      let query = input.value;
+      let res =   getUser(query)
+     res.then((re)=>{
+       //console.log('re:', re)
+       
+      let {avatar_url} =re
+
+      document.getElementById("profile-img").src = avatar_url
+
+
+       
+     })
+    }
+  }
+
+  document.getElementById("btn1").addEventListener("click",epo)
+  async function epo(){
+    try{
+     
+    let name = input.value
+    let response = await fetch(`https://api.github.com/users/${name}/repos`)
+    let data =await response.json()
+    appenddata(data,does)
+    console.log('data:', data)
+    
+    }
+    catch(er){
+      console.log('er:', er)
+
+    }
+
+  }
+</script>
+
+<!-- <script type="module">
+    let btn = document.getElementById("btn1")
+    btn.addEventListener("click",getUserRepo)
+
+  import navbar from "./components/navbar.js";
+  import getUser from "./scripts/getUser.js";
+
+  let container = document.getElementById("container");
+
+  container.innerHTML = navbar();
+
+  let input = document.getElementById("search-input");
+  input.addEventListener("keypress", searchUser);
+ 
+  let response;
+  async function searchUser(event) {
+    if (event.key === "Enter") {
+      // console.log('event:', event)
+
+      let query = input.value;
+
+     response = await getUser(query);
+
+      //console.log('response:', response)
+
+      let { avatar_url } = response;
+
+      document.getElementById("profile-img").src = avatar_url;
+    }
+  }
+
+  async function getUserRepo(){
+        
+
+  try{
+    let res = await fetch(response.repos_url)
+    let repo_data = await res.json()
+    console.log('repo_data:', repo_data)
+  }
+
+  catch(er){
+      console.log('er:', er)
+
+  }
+    
+    }
+</script> -->
